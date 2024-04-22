@@ -4,6 +4,7 @@ import type { Action, State } from '../store/reducer';
 
 import { APP_ROUTE } from '../constants/app-routes.ts';
 import { REQUEST_TYPE } from '../constants/constants.ts';
+import getStore from '../lib/store/store.ts';
 import { sendClientRequest } from '../services/api/client-api.ts';
 import setStateToInitialState from '../store/helper.ts';
 
@@ -35,4 +36,14 @@ export function handleTransferToPreviousRoute(element: HTMLAnchorElement | HTMLB
     event.preventDefault();
     window.history.back();
   };
+}
+
+export function handleMessageEvent(): void {
+  const store = getStore();
+  const { currentDialogueHistory, currentUser } = store.getState();
+  currentDialogueHistory.forEach((message) => {
+    if (message.to === currentUser?.login && message.status.isReaded === false) {
+      sendClientRequest({ message: { id: message.id } }, REQUEST_TYPE.MESSAGE_READ, currentUser.login);
+    }
+  });
 }

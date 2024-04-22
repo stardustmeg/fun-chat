@@ -110,7 +110,6 @@ export const sendClientRequest = (payload: PayloadType, type?: RequestTypeType, 
 };
 
 function incomingMessageHandler(response: RequestChat): void {
-  // TBD Check types
   switch (response.type) {
     case RESPONSE_TYPE.USER_LOGIN:
     case RESPONSE_TYPE.ERROR: {
@@ -122,6 +121,7 @@ function incomingMessageHandler(response: RequestChat): void {
     case RESPONSE_TYPE.MESSAGE_DELETE:
     case RESPONSE_TYPE.MESSAGE_EDIT:
     case RESPONSE_TYPE.MESSAGE_READ: {
+      updateMessageHistory(response);
       break;
     }
     case RESPONSE_TYPE.MESSAGE_SEND:

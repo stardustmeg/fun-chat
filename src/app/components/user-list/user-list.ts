@@ -1,6 +1,8 @@
 import type { Message, User, UserPayload } from '../../types/types.ts';
 
 import {
+  DEFAULT_NUMBER_VALUE,
+  EMPTY_ARRAY,
   EMPTY_STRING,
   EVENT_NAME,
   INPUT_TEXT_CONTENT,
@@ -8,7 +10,11 @@ import {
   REQUEST_TYPE,
   TAG_NAME,
 } from '../../constants/constants.ts';
-import observeStore, { selectActiveAndInactiveUsers, selectMessagesHistory } from '../../lib/store/observer.ts';
+import observeStore, {
+  selectActiveAndInactiveUsers,
+  selectDialogueHistory,
+  selectMessagesHistory,
+} from '../../lib/store/observer.ts';
 import getStore from '../../lib/store/store.ts';
 import { sendClientRequest } from '../../services/api/client-api.ts';
 import { setCurrentUserDialogue } from '../../store/actions.ts';
@@ -34,11 +40,7 @@ export function createDialogueArea(): HTMLDivElement {
 
   observeStore(store, selectActiveAndInactiveUsers, updateDialogueArea);
   observeStore(store, selectMessagesHistory, updateDialogueArea);
-
-  // store.subscribe(() => {
-  //   clearOutElement(listWrapper);
-  //   userList = createUserList();
-  // });
+  subscribeToDialogueHistory();
 
   const userMessage = customCreateElement(TAG_NAME.P, [styles.userMessage], {}, PAGE_DESCRIPTION.CHOOSE_USER_INFO);
   messagesWrapper.append(userMessage);
@@ -46,6 +48,19 @@ export function createDialogueArea(): HTMLDivElement {
   dialogueAreaWrapper.append(userList, messagesWrapper);
 
   return dialogueAreaWrapper;
+}
+const store = getStore();
+
+function subscribeToDialogueHistory(): () => void {
+  return observeStore(store, selectDialogueHistory, () => {
+    const store = getStore();
+    const { currentDialogueHistory, currentUserDialogue } = store.getState();
+    if (currentDialogueHistory.length === DEFAULT_NUMBER_VALUE && currentUserDialogue) {
+      clearOutElement(messagesWrapper);
+      const messageHistory = createMessageHistoryArea(currentUserDialogue);
+      messagesWrapper.append(messageHistory);
+    }
+  });
 }
 
 export function createUserList(searchQuery?: string): HTMLDivElement {
@@ -66,16 +81,6 @@ export function createUserList(searchQuery?: string): HTMLDivElement {
   }
 
   const searchField = createSearchField(filteredUsers);
-
-  // observeStore(store, selectMessagesHistory, () => {
-  //   clearOutElement(userListWrapper);
-  //   createUserItems(filteredUsers, userListWrapper);
-  // });
-
-  // observeStore(store, selectDialogueHistory, () => {
-  //   clearOutElement(userListWrapper);
-  //   createUserItems(filteredUsers, userListWrapper);
-  // });
 
   listWrapper.append(searchField, userListWrapper);
 
@@ -110,7 +115,7 @@ function createUserElement(user: User, messagesIndicator: HTMLElement | null): H
 
 function createMessagesIndicator(notReadMessages: Message[]): HTMLElement | null {
   const { length } = notReadMessages;
-  if (length > 0) {
+  if (length > EMPTY_ARRAY) {
     return customCreateElement(TAG_NAME.DIV, [styles.messagesIndicator], {}, length.toString());
   }
   return null;
@@ -131,7 +136,12 @@ function createUserItems(list: User[], parent: HTMLDivElement): void {
 
     const userMessagesInHistory = messagesHistory.find((message) => message.user === user.login);
 
-    if (currentUser && currentUser.login && userMessagesInHistory && userMessagesInHistory.history.length > 0) {
+    if (
+      currentUser &&
+      currentUser.login &&
+      userMessagesInHistory &&
+      userMessagesInHistory.history.length > EMPTY_ARRAY
+    ) {
       const currentUserLogin = currentUser?.login;
       const notReadMessages = filterNotReadMessages(userMessagesInHistory.history, currentUserLogin);
       const messagesIndicator = createMessagesIndicator(notReadMessages);

@@ -176,6 +176,7 @@ export const EVENT_NAME = {
   OPEN: 'open',
   POPSTATE: 'popstate',
   SUBMIT: 'submit',
+  WHEEL: 'wheel',
 } as const;
 
 export const GLOBAL_STYLE = {

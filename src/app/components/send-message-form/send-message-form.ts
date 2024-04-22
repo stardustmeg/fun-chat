@@ -3,6 +3,7 @@ import type { MessagePayload } from '../../types/types.ts';
 import { EMPTY_STRING, ENTER_KEY, EVENT_NAME, REQUEST_TYPE, TAG_NAME } from '../../constants/constants.ts';
 import getStore from '../../lib/store/store.ts';
 import { sendClientRequest } from '../../services/api/client-api.ts';
+import { handleMessageEvent } from '../../utils/actions.ts';
 import customCreateElement from '../../utils/base-element.ts';
 import { createSvgElement } from '../../utils/utils.ts';
 import styles from './send-message-form.module.scss';
@@ -38,7 +39,7 @@ function createForm(): HTMLFormElement {
 
   sendButton.addEventListener(EVENT_NAME.CLICK, (event) => {
     event.preventDefault();
-    sendButtonHandler(textArea.value);
+    sendButtonHandler(textArea.value, handleMessageEvent);
     textArea.value = EMPTY_STRING;
   });
 
@@ -49,7 +50,7 @@ function createForm(): HTMLFormElement {
     } else if (event.key === ENTER_KEY && !event.shiftKey) {
       event.preventDefault();
       const textToSend = textArea.value.replaceAll(`\n`, `<br>`);
-      sendButtonHandler(textToSend);
+      sendButtonHandler(textToSend, handleMessageEvent);
       textArea.value = EMPTY_STRING;
     }
   });
@@ -59,7 +60,7 @@ function createForm(): HTMLFormElement {
   return form;
 }
 
-function sendButtonHandler(text: string): void {
+function sendButtonHandler(text: string, callback: () => void): void {
   const store = getStore();
   const { currentUserDialogue } = store.getState();
 
@@ -75,4 +76,6 @@ function sendButtonHandler(text: string): void {
     const currentHistoryPayload = { user: { login: currentLogin } };
     sendClientRequest(currentHistoryPayload, REQUEST_TYPE.FETCH_HISTORY, currentLogin);
   }
+
+  callback();
 }

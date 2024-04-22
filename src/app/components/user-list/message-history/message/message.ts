@@ -6,6 +6,7 @@ import { sendClientRequest } from '../../../../services/api/client-api.ts';
 import {
   deleteMessageFromCurrentDialogueHistory,
   editMessageInCurrentDialogueHistory,
+  setCurrentDialogueHistory,
 } from '../../../../store/actions.ts';
 import customCreateElement from '../../../../utils/base-element.ts';
 import formatTimestamp from '../../../../utils/time-converter.ts';
@@ -115,6 +116,10 @@ function createEditedIcon(): HTMLDivElement {
 
 function deleteMessageHandler(messageId: string): void {
   const store = getStore();
+  const { currentDialogueHistory } = store.getState();
+  if (currentDialogueHistory.length === 1) {
+    store.dispatch(setCurrentDialogueHistory([]));
+  }
   const currentPayload = { message: { id: messageId } };
   sendClientRequest(currentPayload, REQUEST_TYPE.MESSAGE_DELETE, messageId);
   store.dispatch(deleteMessageFromCurrentDialogueHistory(currentPayload.message.id));
@@ -125,9 +130,13 @@ function getMessageStyle(message: Message, currentUserDialogue: User | null): st
 }
 
 function createDeliveryStatusElement(message: Message, currentUserDialogue: User | null): HTMLDivElement {
+  if (message.to === currentUserDialogue?.login && message.status.isReaded) {
+    return customCreateElement(TAG_NAME.DIV, [styles.deliveryStatus, styles.current], {}, MESSAGE_STATUS.READ);
+  }
   if (message.to === currentUserDialogue?.login && message.status.isDelivered) {
     return customCreateElement(TAG_NAME.DIV, [styles.deliveryStatus, styles.current], {}, MESSAGE_STATUS.DELIVERED);
   }
+
   return customCreateElement(TAG_NAME.DIV, [styles.deliveryStatus, styles.partner]);
 }
 

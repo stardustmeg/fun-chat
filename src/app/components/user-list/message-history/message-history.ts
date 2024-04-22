@@ -1,8 +1,9 @@
 import type { User } from '../../../types/types.ts';
 
-import { EMPTY_ARRAY, START_CONVERSATION, TAG_NAME } from '../../../constants/constants.ts';
+import { EMPTY_ARRAY, EMPTY_STRING, EVENT_NAME, START_CONVERSATION, TAG_NAME } from '../../../constants/constants.ts';
 import observeStore, { selectActiveAndInactiveUsers, selectDialogueHistory } from '../../../lib/store/observer.ts';
 import getStore from '../../../lib/store/store.ts';
+import { handleMessageEvent } from '../../../utils/actions.ts';
 import customCreateElement from '../../../utils/base-element.ts';
 import clearOutElement, { getRandomIndex } from '../../../utils/utils.ts';
 import createInputArea from '../../send-message-form/send-message-form.ts';
@@ -10,7 +11,7 @@ import createMessages from './message/message.ts';
 import styles from './message-history.module.scss';
 
 const messageHistoryWrapper = customCreateElement(TAG_NAME.DIV, [styles.messageHistoryWrapper]);
-let userMessage = '';
+let userMessage = EMPTY_STRING;
 const messagesHistoryMessage = customCreateElement(TAG_NAME.DIV, [styles.messagesHistoryMessage], {}, userMessage);
 const userNameWrapper = customCreateElement(TAG_NAME.DIV, [styles.userNameWrapper]);
 const messagesHistory = customCreateElement(TAG_NAME.DIV, [styles.messagesHistory]);
@@ -39,24 +40,33 @@ export default function createMessageHistoryArea(user: User): HTMLDivElement {
 
 const store = getStore();
 
-subscribeToDialogueHistory();
-subscribeToActiveUsers();
-
-// const unsubscribeDialogueHistory = subscribeToDialogueHistory();  // TBD To check if I need to unsubscribe
-// const unsubscribeActiveUsers = subscribeToActiveUsers();
-
-function subscribeToDialogueHistory(): () => void {
+(function subscribeToDialogueHistory(): () => void {
   return observeStore(store, selectDialogueHistory, () => {
     checkMessageHistory();
     messagesHistoryMessage.textContent = userMessage;
   });
-}
+})();
 
-subscribeToUsersChange();
+(function subscribeToUsersChange(): () => void {
+  return observeStore(store, selectActiveAndInactiveUsers, () => {
+    updateUserName();
+    checkMessageHistory();
+  });
+})();
 
-function subscribeToUsersChange(): () => void {
-  return observeStore(store, selectActiveAndInactiveUsers, updateUserName);
-}
+(function subscribeToActiveUsers(): () => void {
+  return observeStore(store, selectActiveAndInactiveUsers, () => {
+    const { currentUserDialogue } = store.getState();
+    const { activeUsers } = selectActiveAndInactiveUsers(store.getState());
+
+    const isActiveUser = activeUsers.some((user) => user.login === currentUserDialogue?.login);
+
+    if (isActiveUser) {
+      checkMessageHistory();
+      messagesHistoryMessage.textContent = userMessage;
+    }
+  });
+})();
 
 function updateUserName(): void {
   const { currentAuthenticatedUsers, currentUnauthorizedUsers, currentUserDialogue } = store.getState();
@@ -80,22 +90,8 @@ function updateUserName(): void {
   }
 }
 
-function subscribeToActiveUsers(): () => void {
-  return observeStore(store, selectActiveAndInactiveUsers, () => {
-    const { currentUserDialogue } = store.getState();
-    const { activeUsers } = selectActiveAndInactiveUsers(store.getState());
-
-    const isActiveUser = activeUsers.some((user) => user.login === currentUserDialogue?.login);
-
-    if (isActiveUser) {
-      checkMessageHistory();
-      messagesHistoryMessage.textContent = userMessage;
-    }
-  });
-}
-
 function checkMessageHistory(): void {
-  // TBD Check double calls
+  const store = getStore();
   const { currentDialogueHistory } = store.getState();
   if (currentDialogueHistory?.length !== EMPTY_ARRAY) {
     messagesHistoryMessage.remove();
@@ -106,3 +102,6 @@ function checkMessageHistory(): void {
     userMessage = START_CONVERSATION[getRandomIndex(START_CONVERSATION)];
   }
 }
+
+messagesHistory.addEventListener(EVENT_NAME.CLICK, handleMessageEvent);
+messagesHistory.addEventListener(EVENT_NAME.WHEEL, handleMessageEvent);

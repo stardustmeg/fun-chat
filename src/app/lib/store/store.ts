@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import type { Action, State } from '../../store/reducer.ts';
 import type { Reducer, ReduxStore } from './types';
 
 import { EVENT_NAME, initialState } from '../../constants/constants.ts';
 import { STORAGE_KEY, saveCurrentStateToSessionStorage } from '../../services/session-storage/session-storage.ts';
 import { rootReducer } from '../../store/reducer.ts';
+import { isValidState } from '../../types/types.ts';
 
 class Store<S, A> implements ReduxStore<S, A> {
   private listeners: VoidFunction[] = [];
@@ -14,12 +15,22 @@ class Store<S, A> implements ReduxStore<S, A> {
   private state: S;
 
   constructor(initialData: S, rootReducer: Reducer<S, A>) {
-    const storedData = sessionStorage.getItem(STORAGE_KEY);
+    const storedData: null | string = sessionStorage.getItem(STORAGE_KEY);
+
+    let stateToSet: S;
+
     if (storedData) {
-      this.state = structuredClone(JSON.parse(storedData));
+      const isValid = isValidState(storedData);
+      if (isValid) {
+        stateToSet = structuredClone(JSON.parse(storedData) as S);
+      } else {
+        stateToSet = initialData;
+      }
     } else {
-      this.state = structuredClone(initialData);
+      stateToSet = initialData;
     }
+
+    this.state = structuredClone(stateToSet);
     this.rootReducer = rootReducer;
 
     window.addEventListener(EVENT_NAME.BEFOREUNLOAD, () => saveCurrentStateToSessionStorage(this.state));
