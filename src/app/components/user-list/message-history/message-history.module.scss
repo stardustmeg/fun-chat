@@ -1,0 +1,55 @@
+@import '../../../../styles/colors.module';
+@import '../../../../styles/fonts.module';
+@import '../../../../styles/numbers.module';
+@import '../../../../styles/shadows.module';
+
+.messageHistoryWrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  height: 100%;
+  font-size: $small-number * 1.5;
+}
+
+.messagesWrapper {
+  overflow-y: auto;
+  height: 400px;
+}
+
+.userNameWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: center;
+  justify-content: flex-start;
+  border-bottom: $normal-border solid $dusty-color;
+  padding-bottom: calc($small-number / 2);
+}
+
+.statusIndicator {
+  margin-left: $small-number;
+  border-radius: 50%;
+  width: calc($small-number / 2);
+  height: calc($small-number / 2);
+}
+
+.online {
+  background-color: $contrast-color;
+}
+
+.offline {
+  background-color: $dark-color;
+}
+
+.messagesHistoryMessage {
+  margin: auto;
+}
+
+.messagesHistory {
+  display: flex;
+  flex-direction: column;
+  margin: $standart-number 0;
+  width: 100%;
+  min-height: 500px;
+  max-height: 500px;
+}

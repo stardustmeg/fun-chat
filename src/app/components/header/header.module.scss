@@ -1,0 +1,37 @@
+@import '../../../styles/colors.module';
+@import '../../../styles/fonts.module';
+@import '../../../styles/numbers.module';
+@import '../../../styles/shadows.module';
+
+.header {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $standart-number;
+  width: 100%;
+  color: $darkest-color;
+}
+
+.currentUserName {
+  position: relative;
+  top: 10px;
+  margin: $small-number $big-number;
+}
+
+.nameWrapper {
+  flex-grow: 1;
+}
+
+.currentUserName::after {
+  content: '';
+  display: block;
+  margin: 15px auto;
+  height: $normal-border;
+  max-width: $standart-number * 3;
+  background-color: $dark-color;
+}
+
+.button {
+  margin: $small-number;
+}

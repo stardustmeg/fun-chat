@@ -1,0 +1,67 @@
+@import '../../../styles/colors.module';
+@import '../../../styles/fonts.module';
+@import '../../../styles/numbers.module';
+@import '../../../styles/shadows.module';
+
+.inputArea {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: auto;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  width: 100%;
+}
+
+.textArea {
+  margin: auto;
+  border: $normal-border solid $dusty-color;
+  border-radius: $small-number;
+  padding: $small-number;
+  width: 100%;
+  font-family: $base-font;
+  font-size: clamp(calc($small-number / 1.5), 2vw, $small-number * 1.5);
+  text-align: start;
+  color: $dusty-color;
+  resize: none;
+}
+
+.textArea:focus {
+  outline: none;
+  border-color: $dark-color;
+  padding-left: $small-number;
+  font-size: $small-number * 1.5;
+  color: $darkest-color;
+}
+
+.textArea::placeholder {
+  color: $dusty-color;
+}
+
+.textArea::-webkit-scrollbar {
+  display: none;
+}
+
+.sendButton {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: $big-pixel;
+  height: $big-pixel;
+}
+
+svg {
+  position: relative;
+  right: 1.5px;
+  fill: $dusty-color;
+  transition-duration: 0.5s;
+}
+
+.sendButton:hover svg {
+  fill: $lightest-color;
+  transition-duration: 0.5s;
+}

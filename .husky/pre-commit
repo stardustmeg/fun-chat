@@ -1,0 +1,3 @@
+cd fun-chat
+npx lint-staged
+npx tsc
