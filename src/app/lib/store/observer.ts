@@ -24,9 +24,9 @@ function observeStore<T>(
 export default observeStore;
 
 export function selectActiveAndInactiveUsers(state: State): { activeUsers: User[]; inactiveUsers: User[] } {
-  const { currentAuthenticatedUsers, currentUser } = state;
+  const { currentAuthenticatedUsers, currentUnauthorizedUsers, currentUser } = state;
   const activeUsers = currentAuthenticatedUsers.filter((user) => user !== currentUser);
-  const inactiveUsers = currentAuthenticatedUsers.filter((user) => user === currentUser);
+  const inactiveUsers = currentUnauthorizedUsers;
 
   return { activeUsers, inactiveUsers };
 }
@@ -34,6 +34,11 @@ export function selectActiveAndInactiveUsers(state: State): { activeUsers: User[
 export function selectDialogueHistory(state: State): Message[] | null {
   const { currentDialogueHistory } = state;
   return currentDialogueHistory;
+}
+
+export function selectAllUsers(state: State): User[] {
+  const { allUsers } = state;
+  return allUsers;
 }
 
 export function selectMessagesHistory(state: State): MessagesHistory[] | null {

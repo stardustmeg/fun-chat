@@ -5,7 +5,7 @@ import type { Action, State } from '../store/reducer';
 import { APP_ROUTE } from '../constants/app-routes.ts';
 import { REQUEST_TYPE } from '../constants/constants.ts';
 import { sendClientRequest } from '../services/api/client-api.ts';
-import { clearAllUsers, setCurrentDialogueHistory, setCurrentUser, setCurrentUserDialogue } from '../store/actions.ts';
+import setStateToInitialState from '../store/helper.ts';
 
 export default function handleRouterTransfer(
   element: HTMLAnchorElement | HTMLButtonElement,
@@ -25,10 +25,7 @@ export function logOutHandler(store: ReduxStore<State, Action>, router: Router):
     sendClientRequest({ user: { login: currentUser.login, password: currentUser.password } }, REQUEST_TYPE.USER_LOGOUT);
   }
   sessionStorage.clear();
-  store.dispatch(setCurrentUser(null));
-  store.dispatch(setCurrentDialogueHistory([]));
-  store.dispatch(setCurrentUserDialogue(null));
-  store.dispatch(clearAllUsers([]));
+  setStateToInitialState(store);
   router.navigateTo(APP_ROUTE.Authorization);
 }
 

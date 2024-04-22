@@ -22,7 +22,7 @@ export const rootReducer: Reducer<State, Action> = (state: State, action: Action
     case 'updateAllUsers': {
       return {
         ...state,
-        allUsers: [...state.allUsers, ...action.payload].filter((user) => user.login !== state.currentUser?.login),
+        allUsers: [...state.allUsers, action.payload].filter((user) => user.login !== state.currentUser?.login),
       };
     }
 
@@ -30,6 +30,20 @@ export const rootReducer: Reducer<State, Action> = (state: State, action: Action
       return {
         ...state,
         allUsers: action.payload,
+      };
+    }
+
+    case 'setAuthenticatedUsers': {
+      return {
+        ...state,
+        currentAuthenticatedUsers: action.payload,
+      };
+    }
+
+    case 'setUnauthorizedUsers': {
+      return {
+        ...state,
+        currentUnauthorizedUsers: action.payload,
       };
     }
 
@@ -48,6 +62,13 @@ export const rootReducer: Reducer<State, Action> = (state: State, action: Action
       return {
         ...state,
         messagesHistory: [...state.messagesHistory, action.payload],
+      };
+    }
+
+    case 'setMessagesHistory': {
+      return {
+        ...state,
+        messagesHistory: action.payload,
       };
     }
 

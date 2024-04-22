@@ -11,10 +11,13 @@ const ACTION = {
   GET_UNAUTHORIZED_USERS: 'getUnauthorizedUsers',
   REMOVE_AUTHENTICATED_USER: 'removeAuthenticatedUser',
   REMOVE_UNAUTHORIZED_USER: 'removeUnauthorizedUser',
+  SET_AUTHENTICATED_USERS: 'setAuthenticatedUsers',
   SET_CURRENT_DIALOGUE_HISTORY: 'setCurrentDialogueHistory',
   SET_CURRENT_USER: 'setCurrentUser',
   SET_CURRENT_USER_DIALOGUE: 'setCurrentUserDialogue',
+  SET_MESSAGES_HISTORY: 'setMessagesHistory',
   SET_SOCKET_STATE: 'setSocketState',
+  SET_UNAUTHORIZED_USERS: 'setUnauthorizedUsers',
   UPDATE_ALL_USERS: 'updateAllUsers',
   UPDATE_STORE_MESSAGES_HISTORY: 'updateStoreMessagesHistory',
 } as const;
@@ -25,6 +28,20 @@ interface ActionWithPayload<T, U extends ActionType> {
   payload: T;
   type: U;
 }
+
+export const setAuthenticatedUsers = (
+  value: User[],
+): ActionWithPayload<User[], typeof ACTION.SET_AUTHENTICATED_USERS> => ({
+  payload: value,
+  type: ACTION.SET_AUTHENTICATED_USERS,
+});
+
+export const setUnauthorizedUsers = (
+  value: User[],
+): ActionWithPayload<User[], typeof ACTION.SET_UNAUTHORIZED_USERS> => ({
+  payload: value,
+  type: ACTION.SET_UNAUTHORIZED_USERS,
+});
 
 export const getAuthenticatedUsers = (
   value: User[],
@@ -116,7 +133,7 @@ export const updateStoreMessagesHistory = (
   type: ACTION.UPDATE_STORE_MESSAGES_HISTORY,
 });
 
-export const updateAllUsers = (value: User[]): ActionWithPayload<User[], typeof ACTION.UPDATE_ALL_USERS> => ({
+export const updateAllUsers = (value: User): ActionWithPayload<User, typeof ACTION.UPDATE_ALL_USERS> => ({
   payload: value,
   type: ACTION.UPDATE_ALL_USERS,
 });
@@ -124,4 +141,11 @@ export const updateAllUsers = (value: User[]): ActionWithPayload<User[], typeof 
 export const clearAllUsers = (value: []): ActionWithPayload<[], typeof ACTION.CLEAR_ALL_USERS> => ({
   payload: value,
   type: ACTION.CLEAR_ALL_USERS,
+});
+
+export const setMessagesHistory = (
+  value: MessagesHistory[],
+): ActionWithPayload<MessagesHistory[], typeof ACTION.SET_MESSAGES_HISTORY> => ({
+  payload: value,
+  type: ACTION.SET_MESSAGES_HISTORY,
 });

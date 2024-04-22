@@ -12,11 +12,11 @@ import styles from './message-history.module.scss';
 const messageHistoryWrapper = customCreateElement(TAG_NAME.DIV, [styles.messageHistoryWrapper]);
 let userMessage = '';
 const messagesHistoryMessage = customCreateElement(TAG_NAME.DIV, [styles.messagesHistoryMessage], {}, userMessage);
+const userNameWrapper = customCreateElement(TAG_NAME.DIV, [styles.userNameWrapper]);
 const messagesHistory = customCreateElement(TAG_NAME.DIV, [styles.messagesHistory]);
 
 export default function createMessageHistoryArea(user: User): HTMLDivElement {
-  const userNameWrapper = customCreateElement(TAG_NAME.DIV, [styles.userNameWrapper]);
-  clearOutElement(messageHistoryWrapper, messagesHistory);
+  clearOutElement(userNameWrapper, messageHistoryWrapper, messagesHistory);
 
   if (!user.login) {
     return userNameWrapper;
@@ -50,6 +50,34 @@ function subscribeToDialogueHistory(): () => void {
     checkMessageHistory();
     messagesHistoryMessage.textContent = userMessage;
   });
+}
+
+subscribeToUsersChange();
+
+function subscribeToUsersChange(): () => void {
+  return observeStore(store, selectActiveAndInactiveUsers, updateUserName);
+}
+
+function updateUserName(): void {
+  const { currentAuthenticatedUsers, currentUnauthorizedUsers, currentUserDialogue } = store.getState();
+  if (!currentUserDialogue || !currentUserDialogue.login) {
+    return;
+  }
+  const isUserAuthenticated = currentAuthenticatedUsers.find((user) => user.login === currentUserDialogue.login);
+  const isUserUnauthorized = currentUnauthorizedUsers.find((user) => user.login === currentUserDialogue.login);
+
+  if (isUserAuthenticated || isUserUnauthorized) {
+    clearOutElement(userNameWrapper);
+    const userName = customCreateElement(TAG_NAME.DIV, [styles.userName], {}, currentUserDialogue.login);
+    const statusIndicator = customCreateElement(TAG_NAME.DIV, [styles.statusIndicator]);
+
+    if (currentUserDialogue?.isLogined) {
+      statusIndicator.classList.add(styles.online);
+    } else {
+      statusIndicator.classList.add(styles.offline);
+    }
+    userNameWrapper.append(userName, statusIndicator);
+  }
 }
 
 function subscribeToActiveUsers(): () => void {

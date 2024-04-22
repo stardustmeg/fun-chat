@@ -19,6 +19,7 @@ import {
   removeAuthenticatedUser,
   removeUnauthorizedUser,
   setCurrentDialogueHistory,
+  setCurrentUserDialogue,
   updateAllUsers,
 } from '../../store/actions.ts';
 
@@ -60,11 +61,19 @@ export function updateMessageHistory(currentResponseData: any): void {
 }
 
 function updateUserOnExternalLogin(store: ReduxStore<State, Action>, currentResponseData: any): void {
-  store.dispatch(addAuthenticatedUser(currentResponseData.payload.user));
+  if (currentResponseData.payload.user.login === store.getState().currentUserDialogue?.login) {
+    store.dispatch(setCurrentUserDialogue(currentResponseData.payload.user));
+  }
   store.dispatch(removeUnauthorizedUser(currentResponseData.payload.user));
+  store.dispatch(addAuthenticatedUser(currentResponseData.payload.user));
+  store.dispatch(updateAllUsers(currentResponseData.payload.user));
 }
 
 function updateUserOnExternalLogout(store: ReduxStore<State, Action>, currentResponseData: any): void {
-  store.dispatch(addUnauthorizedUser(currentResponseData.payload.user));
+  if (currentResponseData.payload.user.login === store.getState().currentUserDialogue?.login) {
+    store.dispatch(setCurrentUserDialogue(currentResponseData.payload.user));
+  }
   store.dispatch(removeAuthenticatedUser(currentResponseData.payload.user));
+  store.dispatch(addUnauthorizedUser(currentResponseData.payload.user));
+  store.dispatch(updateAllUsers(currentResponseData.payload.user));
 }
