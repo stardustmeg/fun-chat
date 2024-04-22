@@ -60,8 +60,11 @@ function createMessageElement(message: Message, currentUserDialogue: User | null
 
   const store = getStore();
   const { currentUser } = store.getState();
+
   if (currentUser && message.from === currentUser.login) {
     statusWrapper.append(messageDelete);
+  } else if (message.from !== currentUserDialogue?.login || message.to !== currentUser?.login) {
+    return messageElement;
   }
 
   messageElement.append(senderName, messageText, statusWrapper);
