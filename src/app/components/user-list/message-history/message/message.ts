@@ -21,13 +21,26 @@ export default function createMessages(messages: Message[]): HTMLDivElement {
   const { currentUserDialogue } = getStore().getState();
   findFirstUnreadMessage();
 
-  messages.forEach((message) => {
+  let firstUnreadMessageIndex = -1;
+
+  messages.forEach((message, index) => {
     const messageElement = createMessageElement(message, currentUserDialogue, firstUnreadMessage);
     messagesWrapper.append(messageElement);
+
+    if (firstUnreadMessage && firstUnreadMessageIndex === -1 && message.id === firstUnreadMessage.id) {
+      firstUnreadMessageIndex = index;
+    }
   });
 
   setTimeout(() => {
     messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+    if (firstUnreadMessageIndex !== -1) {
+      const messageElements = messagesWrapper.children;
+      const unreadMessageElement = messageElements[firstUnreadMessageIndex];
+      if (unreadMessageElement instanceof HTMLElement) {
+        unreadMessageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   }, 0);
 
   return messagesWrapper;
@@ -35,8 +48,11 @@ export default function createMessages(messages: Message[]): HTMLDivElement {
 
 function findFirstUnreadMessage(): void {
   const store = getStore();
-  const { currentDialogueHistory } = store.getState();
-  firstUnreadMessage = currentDialogueHistory.find((message) => !message.status.isReaded);
+  const { currentDialogueHistory, currentUser, currentUserDialogue } = store.getState();
+  firstUnreadMessage = currentDialogueHistory.find(
+    (message) =>
+      !message.status.isReaded && message.to === currentUser?.login && message.from === currentUserDialogue?.login,
+  );
 }
 
 function createMessageElement(

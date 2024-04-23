@@ -135,12 +135,12 @@
 .unreadMessage::before {
   content: '';
   position: absolute;
-  right: 0;
+  left: 0;
   top: -20px;
   margin-top: 10px;
-  width: 300%;
+  width: 500%;
   height: 2px;
   min-width: 100%;
-  max-width: 300%;
+  max-width: 500%;
   background-color: $dusty-color;
 }
