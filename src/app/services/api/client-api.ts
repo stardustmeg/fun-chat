@@ -127,7 +127,6 @@ function incomingMessageHandler(response: RequestChat): void {
     case RESPONSE_TYPE.MESSAGE_SEND:
     case RESPONSE_TYPE.MESSAGE_DELIVERED:
     case RESPONSE_TYPE.FETCH_HISTORY: {
-      console.log(response);
       updateMessageHistory(response);
       setUserHistory(response);
       break;
@@ -146,7 +145,6 @@ function incomingMessageHandler(response: RequestChat): void {
     }
 
     default: {
-      console.log('Unknown server response', response);
       break;
     }
   }

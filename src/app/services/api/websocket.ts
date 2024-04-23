@@ -19,7 +19,6 @@ webSocket.addEventListener(EVENT_NAME.OPEN, () => {
   const store = getStore();
   store.dispatch(setSocketState(true));
   loginCurrentUser();
-  console.log('Connected to server');
 });
 
 let responseHandler: ((response: any) => void) | null = null;
@@ -41,8 +40,6 @@ export const sendMessage =
       };
       const message = JSON.stringify(requestMessage);
       webSocket.send(message);
-    } else {
-      console.log('Socket is not open');
     }
   };
 
@@ -58,8 +55,8 @@ webSocket.addEventListener(EVENT_NAME.CLOSE, () => {
   store.dispatch(setSocketState(false));
 });
 
-webSocket.addEventListener(EVENT_NAME.ERROR, (event) => {
-  console.log(event);
+webSocket.addEventListener(EVENT_NAME.ERROR, () => {
+  retryOpenSocket();
 });
 
 const openSocket = (): void => {
@@ -68,7 +65,6 @@ const openSocket = (): void => {
     webSocket = new WebSocket(wsURL);
     webSocket.addEventListener(EVENT_NAME.OPEN, () => {
       store.dispatch(setSocketState(true));
-      console.log('Connected to server');
     });
 
     webSocket.addEventListener(EVENT_NAME.MESSAGE, (event) => {
@@ -77,8 +73,8 @@ const openSocket = (): void => {
       }
     });
 
-    webSocket.addEventListener(EVENT_NAME.ERROR, (event) => {
-      console.log(event);
+    webSocket.addEventListener(EVENT_NAME.ERROR, () => {
+      retryOpenSocket();
     });
 
     webSocket.addEventListener(EVENT_NAME.CLOSE, () => {
