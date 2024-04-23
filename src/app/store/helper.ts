@@ -20,3 +20,12 @@ export default function setStateToInitialState(store: ReduxStore<State, Action>)
   store.dispatch(setAuthenticatedUsers([]));
   store.dispatch(setUnauthorizedUsers([]));
 }
+
+export function keepCurrentUserInInitialState(store: ReduxStore<State, Action>): void {
+  store.dispatch(setCurrentDialogueHistory([]));
+  store.dispatch(setCurrentUserDialogue(null));
+  store.dispatch(clearAllUsers([]));
+  store.dispatch(setMessagesHistory([]));
+  store.dispatch(setAuthenticatedUsers([]));
+  store.dispatch(setUnauthorizedUsers([]));
+}

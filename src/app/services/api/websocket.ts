@@ -9,6 +9,7 @@ import { EVENT_NAME, RETRY_INTERVAL } from '../../constants/constants.ts';
 import getStore from '../../lib/store/store.ts';
 import { setSocketState } from '../../store/actions.ts';
 import { loginCurrentUser } from './client-api.ts'; // TBD Check dependency cycle
+import { keepCurrentUserInInitialState } from '../../store/helper.ts';
 
 const wsURL = 'ws://127.0.0.1:4000';
 let webSocket = new WebSocket(wsURL); // TBD Remove code duplication for websocket listeners
@@ -49,6 +50,7 @@ webSocket.addEventListener(EVENT_NAME.MESSAGE, (event) => {
 
 webSocket.addEventListener(EVENT_NAME.CLOSE, () => {
   const store = getStore();
+  keepCurrentUserInInitialState(store);
   store.dispatch(setSocketState(false));
 });
 
@@ -76,6 +78,7 @@ const openSocket = (): void => {
 
     webSocket.addEventListener(EVENT_NAME.CLOSE, () => {
       const store = getStore();
+      keepCurrentUserInInitialState(store);
       store.dispatch(setSocketState(false));
     });
   }
