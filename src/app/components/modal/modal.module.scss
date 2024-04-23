@@ -25,7 +25,7 @@
   margin: $standart-number;
   border-radius: $standart-number;
   padding: $big-number;
-  height: $standart-number * 5;
+  height: fit-content;
   max-width: $standart-number * 25;
   box-shadow: $base-shadow;
   font-family: $fancy-font;
@@ -41,5 +41,34 @@
 }
 
 .buttonsWrapper {
+  display: flex;
+  flex-direction: column;
   margin-top: $standart-number;
+}
+
+.inputContainer {
+  margin: $small-pixel;
+  height: $standart-pixel * 3.5;
+  max-width: $standart-number * 13.5;
+}
+
+.textArea {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  outline: none;
+  border: $normal-border solid $dusty-color;
+  border-radius: $standart-number;
+  padding: $small-pixel;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: $fancy-font;
+  font-size: $small-number * 1.5;
+  text-align: center;
+  color: $dusty-color;
+}
+
+.inputField:focus {
+  border-color: $dark-color;
+  color: $dark-color;
 }
