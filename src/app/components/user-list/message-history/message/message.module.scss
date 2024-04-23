@@ -126,3 +126,22 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.unreadMessage {
+  position: relative;
+  margin-top: 20px;
+}
+
+.unreadMessage::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -20px;
+  z-index: 5;
+  margin-top: 10px;
+  width: 300%;
+  height: 2px;
+  min-width: 100%;
+  max-width: 300%;
+  background-color: $dusty-color;
+}

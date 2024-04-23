@@ -158,7 +158,6 @@ export function handleUserClick(user: User): void {
   if (!user.login) {
     return;
   }
-
   setCurrentUserAndFetchHistory(user);
   redrawMessageHistory(user, messagesWrapper);
 }
@@ -179,7 +178,6 @@ function sendClientRequestForHistory(user: User): void {
       login: user.login,
     },
   };
-
   sendClientRequest(currentPayload, REQUEST_TYPE.FETCH_HISTORY, user.login);
 }
 
@@ -207,7 +205,6 @@ function createSearchField(users: User[]): HTMLInputElement {
       createUserItems(filteredUsers, userListWrapper);
     }
   });
-
   return searchField;
 }
 

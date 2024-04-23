@@ -57,15 +57,11 @@ export function updateMessageHistory(currentResponseData: any): void {
     case RESPONSE_TYPE.MESSAGE_SEND:
       store.dispatch(addMessageToCurrentDialogueHistory(currentResponseData.payload.message));
       break;
-    case RESPONSE_TYPE.MESSAGE_DELIVERED:
-      store.dispatch(editMessageInCurrentDialogueHistory(currentResponseData.payload.message));
-      break;
     case RESPONSE_TYPE.MESSAGE_DELETE:
       store.dispatch(deleteMessageFromCurrentDialogueHistory(currentResponseData.payload.message));
       break;
+    case RESPONSE_TYPE.MESSAGE_DELIVERED:
     case RESPONSE_TYPE.MESSAGE_EDIT:
-      store.dispatch(editMessageInCurrentDialogueHistory(currentResponseData.payload.message));
-      break;
     case RESPONSE_TYPE.MESSAGE_READ:
       store.dispatch(editMessageInCurrentDialogueHistory(currentResponseData.payload.message));
       break;

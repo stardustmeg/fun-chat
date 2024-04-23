@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import type { Message, User } from '../../../../types/types.ts';
 
 import { EVENT_NAME, FORMAT_OPTION, MESSAGE_STATUS, REQUEST_TYPE, TAG_NAME } from '../../../../constants/constants.ts';
@@ -13,12 +14,15 @@ import formatTimestamp from '../../../../utils/time-converter.ts';
 import { openDeleteModal, openEditModal } from '../../../modal/modal.ts';
 import styles from './message.module.scss';
 
+let firstUnreadMessage: Message | undefined;
+
 export default function createMessages(messages: Message[]): HTMLDivElement {
   const messagesWrapper = customCreateElement(TAG_NAME.DIV, [styles.messagesWrapper]);
   const { currentUserDialogue } = getStore().getState();
+  findFirstUnreadMessage();
 
   messages.forEach((message) => {
-    const messageElement = createMessageElement(message, currentUserDialogue);
+    const messageElement = createMessageElement(message, currentUserDialogue, firstUnreadMessage);
     messagesWrapper.append(messageElement);
   });
 
@@ -29,7 +33,17 @@ export default function createMessages(messages: Message[]): HTMLDivElement {
   return messagesWrapper;
 }
 
-function createMessageElement(message: Message, currentUserDialogue: User | null): HTMLDivElement {
+function findFirstUnreadMessage(): void {
+  const store = getStore();
+  const { currentDialogueHistory } = store.getState();
+  firstUnreadMessage = currentDialogueHistory.find((message) => !message.status.isReaded);
+}
+
+function createMessageElement(
+  message: Message,
+  currentUserDialogue: User | null,
+  firstUnreadMessage: Message | undefined,
+): HTMLDivElement {
   const senderName = createSenderNameElement(message, currentUserDialogue);
 
   const formattedDate = formatTimestamp(message.datetime, FORMAT_OPTION.DATE);
@@ -66,6 +80,10 @@ function createMessageElement(message: Message, currentUserDialogue: User | null
     statusWrapper.append(messageDelete);
   } else if (message.from !== currentUserDialogue?.login || message.to !== currentUser?.login) {
     return messageElement;
+  }
+
+  if (firstUnreadMessage && message.id === firstUnreadMessage.id) {
+    messageElement.classList.add(styles.unreadMessage);
   }
 
   messageElement.append(senderName, messageText, statusWrapper);

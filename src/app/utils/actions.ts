@@ -43,7 +43,12 @@ export function handleMessageEvent(): void {
   const { currentDialogueHistory, currentUser } = store.getState();
   currentDialogueHistory.forEach((message) => {
     if (message.to === currentUser?.login && message.status.isReaded === false) {
-      sendClientRequest({ message: { id: message.id } }, REQUEST_TYPE.MESSAGE_READ, currentUser.login);
+      const currentPayload = {
+        message: {
+          id: message.id,
+        },
+      };
+      sendClientRequest(currentPayload, REQUEST_TYPE.MESSAGE_READ, currentUser.login);
     }
   });
 }

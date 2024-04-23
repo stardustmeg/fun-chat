@@ -10,11 +10,9 @@ import styles from './send-message-form.module.scss';
 
 export default function createInputArea(): HTMLDivElement {
   const inputArea = customCreateElement(TAG_NAME.DIV, [styles.inputArea]);
-
   const form = createForm();
 
   inputArea.append(form);
-
   return inputArea;
 }
 
@@ -39,7 +37,7 @@ function createForm(): HTMLFormElement {
 
   sendButton.addEventListener(EVENT_NAME.CLICK, (event) => {
     event.preventDefault();
-    sendButtonHandler(textArea.value, handleMessageEvent);
+    sendButtonHandler(textArea.value);
     textArea.value = EMPTY_STRING;
   });
 
@@ -50,7 +48,7 @@ function createForm(): HTMLFormElement {
     } else if (event.key === ENTER_KEY && !event.shiftKey) {
       event.preventDefault();
       const textToSend = textArea.value.replaceAll(`\n`, `<br>`);
-      sendButtonHandler(textToSend, handleMessageEvent);
+      sendButtonHandler(textToSend);
       textArea.value = EMPTY_STRING;
     }
   });
@@ -60,7 +58,7 @@ function createForm(): HTMLFormElement {
   return form;
 }
 
-function sendButtonHandler(text: string, callback: () => void): void {
+function sendButtonHandler(text: string): void {
   const store = getStore();
   const { currentUserDialogue } = store.getState();
 
@@ -76,6 +74,5 @@ function sendButtonHandler(text: string, callback: () => void): void {
     const currentHistoryPayload = { user: { login: currentLogin } };
     sendClientRequest(currentHistoryPayload, REQUEST_TYPE.FETCH_HISTORY, currentLogin);
   }
-
-  callback();
+  handleMessageEvent();
 }
