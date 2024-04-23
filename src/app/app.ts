@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { Route } from './router/router.ts';
 
 import styles from './app.module.scss';

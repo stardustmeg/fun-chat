@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 import type { RequestTypeType } from '../../constants/constants.ts';
 import type { PayloadType, RequestChat } from '../../types/types.ts';
 
@@ -10,7 +9,6 @@ import { EVENT_NAME, RETRY_INTERVAL } from '../../constants/constants.ts';
 import getStore from '../../lib/store/store.ts';
 import { setSocketState } from '../../store/actions.ts';
 import { loginCurrentUser } from './client-api.ts'; // TBD Check dependency cycle
-import setStateToInitialState from '../../store/helper.ts';
 
 const wsURL = 'ws://127.0.0.1:4000';
 let webSocket = new WebSocket(wsURL); // TBD Remove code duplication for websocket listeners
@@ -51,7 +49,6 @@ webSocket.addEventListener(EVENT_NAME.MESSAGE, (event) => {
 
 webSocket.addEventListener(EVENT_NAME.CLOSE, () => {
   const store = getStore();
-  setStateToInitialState(store);
   store.dispatch(setSocketState(false));
 });
 

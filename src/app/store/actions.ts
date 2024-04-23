@@ -143,9 +143,7 @@ export const clearAllUsers = (value: []): ActionWithPayload<[], typeof ACTION.CL
   type: ACTION.CLEAR_ALL_USERS,
 });
 
-export const setMessagesHistory = (
-  value: MessagesHistory[],
-): ActionWithPayload<MessagesHistory[], typeof ACTION.SET_MESSAGES_HISTORY> => ({
+export const setMessagesHistory = (value: []): ActionWithPayload<[], typeof ACTION.SET_MESSAGES_HISTORY> => ({
   payload: value,
   type: ACTION.SET_MESSAGES_HISTORY,
 });

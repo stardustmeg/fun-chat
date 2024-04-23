@@ -33,14 +33,16 @@ export const rootReducer: Reducer<State, Action> = (state: State, action: Action
       };
     }
 
-    case 'setAuthenticatedUsers': {
+    case 'setAuthenticatedUsers':
+    case 'getAuthenticatedUsers': {
       return {
         ...state,
         currentAuthenticatedUsers: action.payload,
       };
     }
 
-    case 'setUnauthorizedUsers': {
+    case 'setUnauthorizedUsers':
+    case 'getUnauthorizedUsers': {
       return {
         ...state,
         currentUnauthorizedUsers: action.payload,
@@ -106,20 +108,6 @@ export const rootReducer: Reducer<State, Action> = (state: State, action: Action
       return {
         ...state,
         currentUserDialogue: action.payload,
-      };
-    }
-
-    case 'getAuthenticatedUsers': {
-      return {
-        ...state,
-        currentAuthenticatedUsers: action.payload,
-      };
-    }
-
-    case 'getUnauthorizedUsers': {
-      return {
-        ...state,
-        currentUnauthorizedUsers: action.payload,
       };
     }
 
