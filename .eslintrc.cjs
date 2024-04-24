@@ -60,4 +60,12 @@ module.exports = {
     'no-shadow': 'off',
     'no-use-before-define': 'off',
   },
+  settings: {
+    'import/resolver': {
+      alias: {
+        extensions: ['.ts', '.js', '.jsx', '.json'],
+        map: [['@', './src']],
+      },
+    },
+  },
 };

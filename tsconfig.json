@@ -19,13 +19,13 @@
     "noUncheckedIndexedAccess": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
 
     /* Path aliases */
-    // "baseUrl": ""
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // }
+    "baseUrl": "",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["./src"]
+  "include": ["src"]
 }

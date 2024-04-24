@@ -1,20 +1,19 @@
 {
   "name": "fun-chat",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "The Best e-Commerce-Project",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "deploy": "npm run build && gh-pages -d dist -e fun-chat",
     "preview": "vite preview",
     "format": "prettier --write .",
     "ci:format": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint --ext ts --fix .",
-    "lint-styles": "stylelint \"./src/**/*.scss\"",
-    "prepare": "cd .. && husky fun-chat/.husky"
+    "lint-styles": "stylelint \"./src/**/*.scss\""
   },
   "devDependencies": {
     "@commitlint/cli": "^18.6.1",
@@ -22,13 +21,14 @@
     "@eslint/eslintrc": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.25.2",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-perfectionist": "^2.5.0",
-    "gh-pages": "^6.1.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
@@ -38,12 +38,23 @@
     "stylelint-config-clean-order": "^5.4.1",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-config-standard-scss": "^13.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.8.0",
+    "stylelint-order": "^6.0.4",
     "stylelint-scss": "^6.2.0",
+    "svgo": "^3.2.0",
     "typescript": "^5.3.3",
+    "validate-branch-name": "^1.3.0",
     "vite": "^5.1.4",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-plugin-sass": "^0.1.0"
   },
   "dependencies": {
-    "modern-normalize": "^2.0.0"
-  }
+    "autoprefixer": "^10.4.19",
+    "modern-normalize": "^2.0.0",
+    "vite-plugin-checker": "^0.6.4",
+    "vite-plugin-image-optimizer": "^1.1.7",
+    "vite-plugin-svg-spriter": "^1.0.0",
+    "vite-tsconfig-paths": "^4.3.2"
+  },
+  "homepage": "https://github.com/stardustmeg/ecommerce-application#readme",
+  "license": "ISC"
 }
